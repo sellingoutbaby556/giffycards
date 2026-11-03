@@ -1,0 +1,24 @@
+# One-click deploy blueprint for Render (https://render.com).
+# In Render: New + -> Blueprint -> point at this repo. It reads this file.
+# After the service is created, add your secrets in the dashboard (they are
+# marked sync:false so they are never committed to the repo).
+services:
+  - type: web
+    name: giffycards
+    runtime: node
+    plan: starter            # smallest paid plan; "free" also works for testing
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: STRIPE_SECRET_KEY
+        sync: false          # paste your sk_live_... / sk_test_... in the dashboard
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false          # paste your whsec_... in the dashboard
+      - key: PUBLIC_URL
+        sync: false          # set to your Render URL or custom domain
+      - key: CURRENCY
+        value: usd
+    disk:
+      name: orders-data      # persistent disk so data/orders.json survives restarts
+      mountPath: /app/data
+      sizeGB: 1

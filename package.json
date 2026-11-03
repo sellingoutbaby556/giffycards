@@ -1,0 +1,19 @@
+{
+  "name": "giftcard-store-backend",
+  "version": "1.0.0",
+  "description": "Stripe Checkout backend for a gift-card storefront. Takes payment and records orders; fulfillment is manual.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "stripe": "^17.5.0",
+    "dotenv": "^16.4.7"
+  }
+}

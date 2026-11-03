@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>giffycardsLLC</title>
+<style>
+  :root{
+    --bg:#f5f6f8;--surface:#fff;--surface-2:#eef0f4;--fg:#15181d;--muted:#646b78;--line:#e1e4ea;
+    --accent:#2b59ff;--accent-2:#19c3a4;--accent-ink:#fff;--good:#0ba360;
+    --radius:14px;--shadow:0 1px 2px rgba(21,24,29,.06),0 10px 28px rgba(21,24,29,.09);
+    --display:"Poppins",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0e1016;--surface:#171a22;--surface-2:#1f2430;--fg:#eef1f6;--muted:#9aa3b2;--line:#2a2f3b;
+    --accent:#5b82ff;--accent-2:#2fd9bb;--accent-ink:#0b0d12;--good:#35c988;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.5);color-scheme:dark;}}
+  :root[data-theme="dark"]{
+    --bg:#0e1016;--surface:#171a22;--surface-2:#1f2430;--fg:#eef1f6;--muted:#9aa3b2;--line:#2a2f3b;
+    --accent:#5b82ff;--accent-2:#2fd9bb;--accent-ink:#0b0d12;--good:#35c988;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px rgba(0,0,0,.5);color-scheme:dark;}
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.55;font-size:14px;-webkit-font-smoothing:antialiased}
+  img{max-width:100%}
+  /* Accessibility: visible keyboard focus + skip link */
+  :where(a,button,input,[tabindex]):focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+  .skip{position:absolute;left:12px;top:-60px;z-index:200;background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:0 0 10px 10px;font-weight:600;text-decoration:none;transition:top .18s}
+  .skip:focus{top:0}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;letter-spacing:-.02em;margin:0}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+  header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{max-width:1080px;margin:0 auto;padding:12px max(16px,env(safe-area-inset-left)) 12px max(16px,env(safe-area-inset-right));display:flex;align-items:center;gap:14px}
+  .brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+  .seal{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:16px}
+  .brand b{font-family:var(--display);font-weight:600;font-size:17px}
+  .icon-btn,.toggle{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;padding:8px 12px;display:inline-flex;align-items:center;gap:8px;transition:border-color .15s,transform .08s}
+  .icon-btn:hover,.toggle:hover{border-color:var(--accent)} .icon-btn:active{transform:translateY(1px)}
+  .count{min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:11px;font-weight:700;display:grid;place-items:center;font-variant-numeric:tabular-nums;transition:transform .2s}
+  .count.pop{transform:scale(1.35)}
+  main{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  .hero{padding-block:48px 30px;display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  .hero-copy h1{font-size:clamp(32px,5.4vw,52px);line-height:1.03;margin-bottom:16px}
+  .hero-copy h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-copy p{color:var(--muted);font-size:17px;max-width:42ch;margin:0 0 22px}
+  .btn{font:inherit;font-weight:600;cursor:pointer;border:0;border-radius:11px;padding:13px 20px;transition:transform .08s,filter .15s}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:var(--shadow)} .btn-primary:hover{filter:brightness(1.07)}
+  .showpiece{perspective:1300px;display:grid;place-items:center}
+  .debit{width:min(380px,88%);aspect-ratio:1.586;border-radius:18px;position:relative;color:#fff;padding:24px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(130% 120% at 15% 10%,rgba(255,255,255,.22),transparent 45%),linear-gradient(135deg,#2b59ff,#4a37d6 48%,#19c3a4 120%);box-shadow:0 22px 60px rgba(43,89,255,.34),inset 0 0 0 1px rgba(255,255,255,.18);transform:rotateY(-18deg) rotateX(8deg);animation:floaty 6s ease-in-out infinite;overflow:hidden}
+  .debit::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.28) 48%,transparent 64%);transform:translateX(-120%);animation:sheen 4.5s ease-in-out infinite}
+  .orb{position:absolute;border-radius:999px;filter:blur(2px);opacity:.5}
+  .orb.a{width:120px;height:120px;right:-30px;top:-30px;background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%)}
+  .orb.b{width:90px;height:90px;left:-20px;bottom:-24px;background:radial-gradient(circle,rgba(25,195,164,.7),transparent 70%)}
+  @keyframes floaty{0%,100%{transform:rotateY(-18deg) rotateX(8deg) translateY(0)}50%{transform:rotateY(-18deg) rotateX(8deg) translateY(-12px)}}
+  @keyframes sheen{0%,58%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
+  .debit .top{display:flex;justify-content:space-between;align-items:flex-start;z-index:1}
+  .debit .label{font-family:var(--mono);font-size:10px;letter-spacing:.18em;opacity:.85}
+  .debit .store{font-family:var(--display);font-weight:600;font-size:18px}
+  .debit .chip{width:46px;height:34px;border-radius:7px;background:linear-gradient(135deg,#ffe08a,#d4a017);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);position:relative;z-index:1}
+  .debit .chip::before,.debit .chip::after{content:"";position:absolute;left:6px;right:6px;height:1px;background:rgba(0,0,0,.25)}
+  .debit .chip::before{top:12px} .debit .chip::after{top:20px}
+  .debit .num{font-family:var(--mono);font-size:16px;letter-spacing:.14em;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.2);display:flex;gap:.5em;align-items:baseline}
+  .debit .foot{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:10px;letter-spacing:.06em;opacity:.9;z-index:1;gap:14px}
+  .debit .foot .k{font-size:7px;letter-spacing:.14em;opacity:.7;display:block}
+  .debit .wave{display:inline-flex;gap:2px}
+  .debit .wave i{width:5px;height:5px;border:1.5px solid #fff;border-left:0;border-top:0;border-radius:0 6px 0 0;display:inline-block;opacity:.8}
+  .blur{filter:blur(4px);opacity:.85;user-select:none}
+  .blur-sm{filter:blur(3px);opacity:.85;user-select:none}
+  .trust{display:flex;gap:10px 26px;flex-wrap:wrap;justify-content:center;padding-block:8px 34px;color:var(--muted);font-size:13.5px}
+  .trust span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:6px;height:6px;border-radius:999px;background:var(--accent-2)}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-block:8px 20px;flex-wrap:wrap}
+  .sec-head h2{font-size:clamp(24px,3.4vw,32px)} .sec-head p{color:var(--muted);font-size:14px;margin:0}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding-bottom:40px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);opacity:0;transform:translateY(14px);animation:rise .5s ease forwards}
+  @keyframes rise{to{opacity:1;transform:none}}
+  .face{aspect-ratio:1.586;margin:14px 14px 0;border-radius:12px;color:#fff;padding:16px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;background:radial-gradient(130% 120% at 15% 10%,rgba(255,255,255,.2),transparent 45%),linear-gradient(135deg,#2b59ff,#4a37d6 55%,#19c3a4 130%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+  .face .mini-chip{width:32px;height:23px;border-radius:5px;background:linear-gradient(135deg,#ffe08a,#d4a017);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+  .face .store{font-family:var(--display);font-weight:600;font-size:14px}
+  .face .amt{font-family:var(--display);font-weight:700;font-size:26px}
+  .face .num{font-family:var(--mono);font-size:11px;letter-spacing:.1em;opacity:.95;display:flex;gap:.4em;align-items:baseline}
+  .face .frow{display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;opacity:.95;gap:10px}
+  .face .frow .k{font-size:6.5px;letter-spacing:.12em;opacity:.7;display:block}
+  .shine{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.2) 50%,transparent 65%);transform:translateX(-120%);transition:transform .7s}
+  .card:hover .shine{transform:translateX(120%)} .card:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+  .cbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .name{font-family:var(--display);font-size:17px;font-weight:600} .desc{color:var(--muted);font-size:13px;flex:1}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px}
+  .price{font-family:var(--display);font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+  .stock{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .add{font:inherit;font-weight:600;cursor:pointer;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);padding:9px 15px;transition:transform .08s,filter .15s}
+  .add:hover{filter:brightness(1.08)} .add:active{transform:translateY(1px)} .add:disabled{opacity:.45;cursor:not-allowed}
+  footer{border-top:1px solid var(--line);padding-block:26px 40px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .scrim{position:fixed;inset:0;background:rgba(8,10,14,.5);opacity:0;pointer-events:none;transition:opacity .25s;z-index:70}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);background:var(--surface);z-index:80;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.3,.7,.2,1);box-shadow:-20px 0 50px rgba(0,0,0,.25)}
+  .drawer.open{transform:none}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px;border-bottom:1px solid var(--line)} .drawer h2{font-size:20px}
+  .x{font:inherit;font-size:20px;cursor:pointer;background:none;border:0;color:var(--muted);padding:4px 8px;border-radius:8px} .x:hover{color:var(--fg);background:var(--surface-2)}
+  .items{flex:1;overflow-y:auto;padding:8px 18px}
+  .empty{color:var(--muted);text-align:center;padding:48px 12px}
+  .line{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+  .thumb{width:54px;aspect-ratio:1.586;border-radius:7px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);background:linear-gradient(135deg,#2b59ff,#19c3a4)}
+  .ln-name{font-weight:600;font-size:14px} .ln-ser{font-family:var(--mono);font-size:11px;color:var(--muted)}
+  .qty{display:inline-flex;align-items:center;gap:2px;margin-top:5px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .qty button{font:inherit;cursor:pointer;border:0;background:var(--surface-2);color:var(--fg);width:24px;height:24px} .qty button:hover{background:var(--accent);color:var(--accent-ink)}
+  .qty span{min-width:24px;text-align:center;font-variant-numeric:tabular-nums;font-size:13px}
+  .ln-price{font-weight:600;font-variant-numeric:tabular-nums}
+  .drawer-foot{border-top:1px solid var(--line);padding:16px 18px calc(18px + env(safe-area-inset-bottom));display:grid;gap:12px}
+  .tot{display:flex;justify-content:space-between;font-size:15px} .tot b{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+  .checkout{font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);padding:15px;font-size:16px}
+  .checkout:disabled{opacity:.5;cursor:progress}
+  .fineprint{font-size:11.5px;color:var(--muted);text-align:center}
+  @media (max-width:860px){.hero{grid-template-columns:1fr;gap:24px;padding-block:32px 22px}.showpiece{order:-1}.grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:520px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#shop" class="skip">Skip to gift cards</a>
+<header>
+  <div class="bar">
+    <div class="brand"><div class="seal" aria-hidden="true">G</div><b>giffycardsLLC</b></div>
+    <button class="toggle" id="themeBtn" aria-label="Toggle light or dark theme" title="Toggle theme">◐</button>
+    <button class="icon-btn" id="cartBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
+      Cart <span class="count" id="count" aria-hidden="true">0</span>
+      <span class="sr-only" id="cartLabel">cart, 0 items</span>
+    </button>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Gift cards · $100–$5,000</p>
+      <h1>Gift cards for<br><em>every occasion.</em></h1>
+      <p>Pick an amount, check out, and your gift card arrives by email in seconds. Six denominations from $100 to $5,000, each ready to send and spend.</p>
+      <button class="btn btn-primary" id="shopBtn">Shop gift cards</button>
+    </div>
+    <div class="showpiece">
+      <div class="debit" aria-hidden="true">
+        <span class="orb a"></span><span class="orb b"></span>
+        <div class="top"><div><div class="label">GIFT CARD</div><div class="store">giffycardsLLC</div></div>
+          <div class="wave" title="contactless"><i></i><i></i><i></i></div></div>
+        <div class="chip"></div>
+        <div class="num"><span class="blur">5042 8817 0000</span><span id="heroLast">0001</span></div>
+        <div class="foot">
+          <span><span class="k">CARD HOLDER</span><span id="heroName">ALEX MORGAN</span></span>
+          <span><span class="k">VALID THRU</span><span id="heroExp">08/29</span></span>
+          <span><span class="k">CVC</span><span class="blur-sm">***</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="trust">
+    <span><i class="dot"></i> Unique number per card</span>
+    <span><i class="dot"></i> Secure checkout by Stripe</span>
+    <span><i class="dot"></i> 25 of each amount in stock</span>
+  </div>
+  <div class="sec-head"><h2 id="shop" tabindex="-1">Choose an amount</h2><p>Every gift card $100–$5,000 · 25 in stock each</p></div>
+  <section class="grid" id="grid" aria-label="Gift cards"></section>
+  <footer><span>© 2026 giffycardsLLC</span><span>Prices in USD · Payments processed by Stripe</span></footer>
+</main>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-head"><h2 id="drawerTitle">Your cart</h2><button class="x" id="closeBtn" aria-label="Close cart">×</button></div>
+  <div id="drawerBody" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+</aside>
+
+<script>
+(function(){
+  "use strict";
+  var PRODUCT_ID="giftcard";                 // must match catalog.js on the server
+  var DENOMS=[100,250,500,1000,2500,5000];
+  var STOCK=25;
+  // Random cardholder names + post-2027 expiries for the card art (display only).
+  var FIRST=["ALEX","JORDAN","TAYLOR","CASEY","MORGAN","RILEY","SAM","JAMIE","QUINN","AVERY","DREW","REESE"];
+  var LAST=["MORGAN","CARTER","REYES","BROOKS","HAYES","PATEL","NGUYEN","FLORES","BENNETT","OKAFOR","ROSSI","KIM"];
+  var fmt=function(n){return "$"+n.toLocaleString("en-US")};
+  function rand(a){return a[Math.floor(Math.random()*a.length)]}
+  function randName(){return rand(FIRST)+" "+rand(LAST)}
+  function randLast4(){return String(Math.floor(1000+Math.random()*9000))}
+  function randExpiry(){ // any date past 2027
+    var mm=String(Math.floor(1+Math.random()*12)).padStart(2,"0");
+    var yy=28+Math.floor(Math.random()*5); // 2028–2032
+    return mm+"/"+yy;
+  }
+  var stock={}; DENOMS.forEach(function(d){stock[d]=STOCK});
+  var cart={},issued={};
+  var $=function(s,r){return (r||document).querySelector(s)};
+  var grid=$("#grid"),countEl=$("#count"),drawer=$("#drawer"),scrim=$("#scrim"),drawerBody=$("#drawerBody"),drawerTitle=$("#drawerTitle");
+
+  DENOMS.forEach(function(d,i){
+    var el=document.createElement("article");el.className="card";el.setAttribute("data-denom",d);el.style.animationDelay=(i*60)+"ms";
+    var name=randName(),last4=randLast4(),exp=randExpiry();
+    el.innerHTML='<div class="face"><div class="shine"></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+        '<div><div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;opacity:.8">GIFT CARD</div>'+
+        '<div class="store">giffycardsLLC</div></div><span class="amt">'+fmt(d)+'</span></div>'+
+      '<div class="mini-chip"></div>'+
+      '<div class="num"><span class="blur-sm">•••• •••• ••••</span><span class="js-last">'+last4+'</span></div>'+
+      '<div class="frow">'+
+        '<span><span class="k">CARD HOLDER</span><span class="js-name">'+name+'</span></span>'+
+        '<span><span class="k">VALID THRU</span><span class="js-exp">'+exp+'</span></span>'+
+        '<span><span class="k">CVC</span><span class="blur-sm">***</span></span>'+
+      '</div></div>'+
+      '<div class="cbody"><div class="name">'+fmt(d)+' Gift Card</div>'+
+      '<div class="desc">A giffycardsLLC gift card loaded with '+fmt(d)+'. Redeemable in store and online.</div>'+
+      '<div class="row"><span class="price">'+fmt(d)+'</span><span class="stock js-stock"></span></div>'+
+      '<button class="add" data-denom="'+d+'">Add to cart</button></div>';
+    grid.appendChild(el);sync(el,d);
+  });
+  function sync(el,d){var st=stock[d];$(".js-stock",el).textContent=st>0?st+" in stock":"Sold out";
+    var a=$(".add",el);a.disabled=st<=0;a.textContent=st<=0?"Sold out":"Add to cart"}
+  grid.addEventListener("click",function(e){var b=e.target.closest(".add");if(!b||b.disabled)return;
+    var d=Number(b.getAttribute("data-denom"));add(d);b.textContent="Added ✓";var el=b.closest(".card");setTimeout(function(){sync(el,d)},900)});
+  function totQty(){return Object.values(cart).reduce(function(a,b){return a+b},0)}
+  function totPrice(){return Object.keys(cart).reduce(function(s,d){return s+cart[d]*Number(d)},0)}
+  function add(d){cart[d]=(cart[d]||0)+1;count(true);if(drawer.classList.contains("open"))renderCart()}
+  function setQty(d,q){if(q<=0)delete cart[d];else cart[d]=q;count(true);renderCart()}
+  function count(p){var q=totQty();countEl.textContent=q;
+    var lbl=$("#cartLabel");if(lbl)lbl.textContent="cart, "+q+(q===1?" item":" items");
+    if(p){countEl.classList.add("pop");setTimeout(function(){countEl.classList.remove("pop")},200)}}
+  var lastFocus=null;
+  function openD(){lastFocus=document.activeElement;drawer.classList.add("open");scrim.classList.add("open");
+    drawer.setAttribute("aria-hidden","false");$("#cartBtn").setAttribute("aria-expanded","true");renderCart();
+    var f=drawer.querySelector("button, [href], input, [tabindex]");if(f)f.focus()}
+  function closeD(){drawer.classList.remove("open");scrim.classList.remove("open");
+    drawer.setAttribute("aria-hidden","true");$("#cartBtn").setAttribute("aria-expanded","false");
+    if(lastFocus&&lastFocus.focus){lastFocus.focus()}}
+  // keep Tab inside the open drawer
+  drawer.addEventListener("keydown",function(e){
+    if(e.key!=="Tab"||!drawer.classList.contains("open"))return;
+    var f=drawer.querySelectorAll('button, [href], input, [tabindex]:not([tabindex="-1"])');
+    if(!f.length)return;var first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  });
+  function renderCart(){
+    drawerTitle.textContent="Your cart";var ds=Object.keys(cart);
+    if(!ds.length){drawerBody.innerHTML='<div class="empty">Your cart is empty.<br>Add a gift card to get started.</div>';return}
+    var rows=ds.map(function(d){var q=cart[d];
+      return '<div class="line"><div class="thumb"></div><div><div class="ln-name">'+fmt(Number(d))+' Gift Card</div>'+
+        '<div class="ln-ser">giffycardsLLC · '+fmt(Number(d))+' each</div>'+
+        '<div class="qty" data-denom="'+d+'"><button data-op="dec">−</button><span>'+q+'</span><button data-op="inc">+</button></div></div>'+
+        '<div class="ln-price">'+fmt(q*Number(d))+'</div></div>'}).join("");
+    drawerBody.innerHTML='<div class="items">'+rows+'</div><div class="drawer-foot">'+
+      '<div class="tot"><span>Subtotal ('+totQty()+' cards)</span><b>'+fmt(totPrice())+'</b></div>'+
+      '<button class="checkout" id="pay">Checkout · '+fmt(totPrice())+'</button>'+
+      '<div class="fineprint">You\'ll be taken to Stripe\'s secure checkout.</div></div>';
+    $(".items",drawerBody).addEventListener("click",function(e){var b=e.target.closest("button[data-op]");if(!b)return;var d=b.closest(".qty").getAttribute("data-denom");setQty(d,cart[d]+(b.getAttribute("data-op")==="inc"?1:-1))});
+    $("#pay").addEventListener("click",checkout);
+  }
+  function checkout(){
+    var btn=$("#pay");btn.disabled=true;btn.textContent="Redirecting to Stripe…";
+    var items=Object.keys(cart).map(function(d){return {id:PRODUCT_ID,denom:Number(d),qty:cart[d]}});
+    fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items:items})})
+      .then(function(r){return r.json()}).then(function(data){
+        if(data.url){window.location=data.url}else{throw new Error(data.error||"Checkout failed")}
+      }).catch(function(err){btn.disabled=false;btn.textContent="Try again";
+        var note=document.createElement("div");note.className="fineprint";note.style.color="#c0392b";note.textContent=err.message;btn.parentNode.appendChild(note)});
+  }
+  $("#cartBtn").addEventListener("click",openD);$("#closeBtn").addEventListener("click",closeD);scrim.addEventListener("click",closeD);
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeD()});
+  $("#shopBtn").addEventListener("click",function(){var s=$("#shop");s.scrollIntoView({behavior:"smooth"});s.focus({preventScroll:true})});
+  document.querySelector(".skip").addEventListener("click",function(){setTimeout(function(){$("#shop").focus()},0)});
+  // hero card: random identity, animated last-4 ticker
+  $("#heroName").textContent=randName();$("#heroExp").textContent=randExpiry();
+  var hl=$("#heroLast"),n=1;setInterval(function(){n=n%9999+1;hl.textContent=String(n).padStart(4,"0")},1400);
+  var root=document.documentElement;
+  try{var s=localStorage.getItem("gc-theme");if(s)root.setAttribute("data-theme",s)}catch(e){}
+  $("#themeBtn").addEventListener("click",function(){var cur=root.getAttribute("data-theme");
+    var n2=cur==="dark"?"light":cur==="light"?"dark":(matchMedia("(prefers-color-scheme:dark)").matches?"light":"dark");
+    root.setAttribute("data-theme",n2);try{localStorage.setItem("gc-theme",n2)}catch(e){}});
+  count(false);
+})();
+</script>
+</body>
+</html>
